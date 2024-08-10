@@ -71,6 +71,4 @@ This project is a sophisticated AI-powered chatbot designed for intelligent docu
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
-## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
