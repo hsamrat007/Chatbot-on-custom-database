@@ -8,7 +8,7 @@ from langchain_cohere import CohereEmbeddings
 from langchain_community.vectorstores import FAISS
 from langchain.chains import RetrievalQA
 
-# Load environment variables
+
 load_dotenv('/Users/harshitsamrat/Documents/python/Anveshak/.env')
 os.environ['HUGGINGFACEHUB_API_TOKEN'] = os.getenv("HUGGINGFACEHUB_API_TOKEN")
 os.environ['LANGCHAIN_TRACING_V2'] = "true"
@@ -39,7 +39,7 @@ qa_chain = RetrievalQA.from_chain_type(
 )
 
 def get_chatbot_response(user_input):
-    # Prepare the prompt
+   
     prompt = f"""Human: {user_input}
 
 Assistant: I will provide a helpful, detailed, and accurate response based on the content of the "GHC+2025+R&R+Version+1.0.pdf" paper. I'll break down the answer step-by-step when appropriate.
