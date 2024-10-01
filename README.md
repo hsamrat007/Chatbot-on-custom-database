@@ -12,7 +12,7 @@ This project is a sophisticated AI-powered chatbot designed for intelligent docu
 - **Interactive Web Interface**: Offer a user-friendly chat interface for easy interaction.
 - **Real-time Communication**: Enable seamless communication between frontend and backend.
 
-change it somehying more sensible change to llama 3 8b and hugging face embeddings and text file question answering
+
 
 ## Technologies Used
 
