@@ -4,13 +4,15 @@ This project is a sophisticated AI-powered chatbot designed for intelligent docu
 
 ## Features
 
--**Text File Analysis**: I processed and analyzed text files (like medical textbooks) using advanced NLP techniques.
--**Intelligent Chunking**: I utilized RecursiveCharacterTextSplitter for optimal text segmentation.
--**Advanced Embedding**: I leveraged Hugging Face embeddings to create high-quality text representations.
--*8Efficient Retrieval**: I employed FAISS to ensure fast and accurate information retrieval.
--*8Powerful Language Model**: I integrated Llama-3-8B to generate human-like responses.
--**Interactive Web Interface**: I provided a user-friendly chat interface for seamless interactions.
--**Real-time Communication**: I enabled smooth communication between the frontend and backend for efficient, real-time question answering.
+- **PDF Analysis**: Process and analyze PDF documents using advanced NLP techniques.
+- **Intelligent Chunking**: Utilize RecursiveCharacterTextSplitter for optimal text segmentation.
+- **Advanced Embedding**: Leverage CohereEmbeddings for high-quality text representation.
+- **Efficient Retrieval**: Employ FAISS for fast and accurate information retrieval.
+- **Powerful Language Model**: Integrate the Mistral-7B-v0.1 model for generating human-like responses.
+- **Interactive Web Interface**: Offer a user-friendly chat interface for easy interaction.
+- **Real-time Communication**: Enable seamless communication between frontend and backend.
+
+change it somehying more sensible change to llama 3 8b and hugging face embeddings and text file question answering
 
 ## Technologies Used
 
