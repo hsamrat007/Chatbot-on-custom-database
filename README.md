@@ -8,7 +8,7 @@ This project is a sophisticated AI-powered chatbot designed for intelligent docu
 - **Intelligent Chunking**: Utilize RecursiveCharacterTextSplitter for optimal text segmentation.
 - **Advanced Embedding**: Leverage CohereEmbeddings for high-quality text representation.
 - **Efficient Retrieval**: Employ FAISS for fast and accurate information retrieval.
-- **Powerful Language Model**: Integrate the Mistral-7B-v0.1 model for generating human-like responses.
+- **Powerful Language Model**: Integrate the Mistral-7B-v0.1 or any other llm model for generating human-like responses.
 - **Interactive Web Interface**: Offer a user-friendly chat interface for easy interaction.
 - **Real-time Communication**: Enable seamless communication between frontend and backend.
 
