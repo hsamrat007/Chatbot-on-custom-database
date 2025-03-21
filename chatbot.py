@@ -1,60 +1,77 @@
-
 import os
 from dotenv import load_dotenv
-from langchain_huggingface import HuggingFaceEndpoint
 from langchain_community.document_loaders import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain_cohere import CohereEmbeddings
+from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_community.vectorstores import FAISS
-from langchain.chains import RetrievalQA
+from langchain.chains import ConversationalRetrievalChain
+from langchain.memory import ConversationBufferMemory
+from langchain_huggingface import HuggingFaceEndpoint
+
+from langchain_huggingface import HuggingFaceEmbeddings  
+from langchain_community.vectorstores import FAISS
 
 
-load_dotenv('/Users/harshitsamrat/Documents/python/Anveshak/.env')
-os.environ['HUGGINGFACEHUB_API_TOKEN'] = os.getenv("HUGGINGFACEHUB_API_TOKEN")
-os.environ['LANGCHAIN_TRACING_V2'] = "true"
-os.environ['LANGCHAIN_API_KEY'] = os.getenv("LANGCHAIN_API_KEY")
-os.environ['COHERE_API_KEY'] = os.getenv("COHERE_API_KEY")
+load_dotenv('/Volumes/Sam t7/Projects/custom_chatbot/Chatbot-on-custom-database/.env')
 
 
-loader = PyPDFLoader("GHC+2025+R&R+Version+1.0.pdf")
+loader = PyPDFLoader("/Volumes/Sam t7/Projects/custom_chatbot/Chatbot-on-custom-database/400-Finance-Questions.pdf")
 docs = loader.load()
-splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=100)
-chunked = splitter.split_documents(docs)
-db = FAISS.from_documents(chunked, CohereEmbeddings())
+
+text_splitter = RecursiveCharacterTextSplitter(
+    chunk_size=384,
+    chunk_overlap=96,
+    separators=["\n\n", "\n", ". ", " ", ""]
+)
+chunked_docs = text_splitter.split_documents(docs)
 
 
+# 
+embeddings = HuggingFaceEmbeddings(
+    model_name="sentence-transformers/all-MiniLM-L6-v2",
+    model_kwargs={'device': 'cpu'},  # Required parameter [7]
+    encode_kwargs={'normalize_embeddings': True}  # Optional but recommended
+)
+db = FAISS.from_documents(
+    documents=chunked_docs,
+    embedding=embeddings
+)
 llm = HuggingFaceEndpoint(
-    repo_id="mistralai/Mistral-7B-v0.1",
+    repo_id="mistralai/Mistral-7B-Instruct-v0.1",
     task="text-generation",
-    max_new_tokens=300,
-    do_sample=True,
+    max_new_tokens=512,
     temperature=0.7,
+    top_p=0.95,
+    repetition_penalty=1.15
 )
-
-qa_chain = RetrievalQA.from_chain_type(
+memory = ConversationBufferMemory(
+    memory_key="chat_history",
+    return_messages=True,
+    output_key='answer'
+)
+qa_chain = ConversationalRetrievalChain.from_llm(
     llm=llm,
-    chain_type="stuff",
-    retriever=db.as_retriever(search_kwargs={"k": 3}),
+    retriever=db.as_retriever(search_kwargs={"k": 4}),
+    memory=memory,
     return_source_documents=True,
+    get_chat_history=lambda h: h,
+    verbose=False
 )
-
 def get_chatbot_response(user_input):
-   
-    prompt = f"""Human: {user_input}
-
-Assistant: I will provide a helpful, detailed, and accurate response based on the content of the "GHC+2025+R&R+Version+1.0.pdf" paper. I'll break down the answer step-by-step when appropriate.
-
-"""
+    # Format prompt with document context instructions
+    formatted_prompt = f"""You are a very smart document reader your task is to answer all the queries which user asks and answer should be from the document i provide if you are not sure of answer just tell it i am not sure about it and tell "have a good day",dont asnwer anything other than the pdf dont use your general llm knowledge.
     
-
-    result = qa_chain({"query": prompt})
+    Question: {user_input}
     
-  
-    answer = result['result']
-    sources = [doc.metadata.get('source', 'Unknown') for doc in result['source_documents']]
+    Helpful Answer:"""
     
+    # Execute the chain
+    response = qa_chain({"question": formatted_prompt})
     
-    final_response = f"{answer}\n\nSources: {', '.join(sources)}"
+    # Process sources
+    sources = list(set(
+        f"Page {doc.metadata['page']+1}"  # Convert 0-index to 1-index
+        for doc in response['source_documents']
+    ))
     
-    return final_response
-
+    return f"{response['answer']}\n\nSources: {', '.join(sources)}"
