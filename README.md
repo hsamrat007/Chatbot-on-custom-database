@@ -39,24 +39,19 @@ This project is a sophisticated AI-powered chatbot designed for intelligent docu
 
 ## Setup and Installation
 
-1. Clone the repository:
-   ```
-   git clone https://github.com/your-username/your-repo-name.git
-   ```
-
-2. Install the required dependencies:
+1. Install the required dependencies:
    ```
    pip install -r requirements.txt
    ```
 
-3. Set up your environment variables in a `.env` file:
+2. Set up your environment variables in a `.env` file:
    ```
    HUGGINGFACEHUB_API_TOKEN=your_token_here
    LANGCHAIN_API_KEY=your_key_here
    COHERE_API_KEY=your_key_here
    ```
 
-4. Run the Flask application:
+3. Run the Flask application:
    ```
    python app.py
    ```
